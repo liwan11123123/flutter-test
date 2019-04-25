@@ -110,7 +110,6 @@
 //   }
 // }
 
-
 // 自定义小部件  一个AppBar
 // import 'package:flutter/material.dart';
 
@@ -176,67 +175,135 @@
 // }
 
 // 浮动button Scaffold小部件，点击 返回不同的Widget
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(SampleApp());
+// }
+
+// class SampleApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Sample App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SampleAppPage(),
+//     );
+//   }
+// }
+
+// class SampleAppPage extends StatefulWidget {
+//   SampleAppPage({Key key}) : super(key: key);
+
+//   @override
+//   _SampleAppPageState createState() => _SampleAppPageState();
+// }
+
+// class _SampleAppPageState extends State<SampleAppPage> {
+//   bool toggle = true;
+//   void _toggle() {
+//     setState(() {
+//       toggle = !toggle;
+//     });
+//   }
+
+//   _getToggleChild() {
+//     if (toggle) {
+//       return Text('Toggle One');
+//     } else {
+//       return MaterialButton(
+//         onPressed: () {
+
+//         },
+//         child: Text('Toggle Two'),
+//       );
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Sample App'),
+//       ),
+//       body: Center(
+//         child: _getToggleChild(),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _toggle,
+//         backgroundColor: Color.alphaBlend(Colors.green, Colors.blue),
+//         tooltip: 'Update Text',
+//         // child: Icon(Icons.update),
+//       ),
+//     );
+//   }
+// }
+
+
+// 动画效果，
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(SampleApp());
+  runApp(FadeAppTest());
 }
 
-class SampleApp extends StatelessWidget {
+class FadeAppTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sample App',
+      title: 'Fade Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SampleAppPage(),
+      home: MyFadeTest(title: 'Fade Demo'),
     );
   }
 }
 
-class SampleAppPage extends StatefulWidget {
-  SampleAppPage({Key key}) : super(key: key);
+class MyFadeTest extends StatefulWidget {
+  MyFadeTest({Key key, this.title}) : super(key: key);
+  final String title;
 
   @override
-  _SampleAppPageState createState() => _SampleAppPageState();
+  _MyFadeTest createState() => _MyFadeTest();
 }
 
-class _SampleAppPageState extends State<SampleAppPage> {
-  bool toggle = true;
-  void _toggle() {
-    setState(() {
-      toggle = !toggle;
-    });
-  }
+class _MyFadeTest extends State<MyFadeTest> with TickerProviderStateMixin {
+  AnimationController controller;
+  CurvedAnimation curve;
 
-  _getToggleChild() {
-    if (toggle) {
-      return Text('Toggle One');
-    } else {
-      return MaterialButton(
-        onPressed: () {
-
-        },
-        child: Text('Toggle Two'),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
+    curve = CurvedAnimation(parent: controller, curve: Curves.easeIn);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sample App'),
+        title: Text(widget.title),
       ),
       body: Center(
-        child: _getToggleChild(),
+        child: Container(
+          child: FadeTransition(
+            opacity: curve,
+            child: FlutterLogo(
+              size: 100.0,
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _toggle,
-        backgroundColor: Color.alphaBlend(Colors.green, Colors.blue),
-        tooltip: 'Update Text',
-        // child: Icon(Icons.update),
+        tooltip: 'Fade',
+        child: Icon(Icons.brush),
+        onPressed: () {
+          controller.forward();
+        },
       ),
     );
   }
