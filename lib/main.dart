@@ -308,50 +308,123 @@
 //   }
 // }
 
+// canvas 画图
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MaterialApp(home: DemoApp()));
+
+// class DemoApp extends StatelessWidget {
+//   Widget build(BuildContext context) => Scaffold(body: Signature());
+// }
+
+// class Signature extends StatefulWidget {
+//   SignatureState createState() => SignatureState();
+// }
+
+// class SignatureState extends State<Signature> {
+//   List<Offset> _points = <Offset>[];
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onPanUpdate: (DragUpdateDetails details) {
+//         setState(() {
+//           RenderBox referenceBox = context.findRenderObject();
+//           Offset localPosition =
+//               referenceBox.globalToLocal(details.globalPosition);
+//           _points = List.from(_points)..add(localPosition);
+//         });
+//       },
+//       onPanEnd: (DragEndDetails details) => _points.add(null),
+//       child:
+//           CustomPaint(painter: SignaturePainter(_points), size: Size.infinite),
+//     );
+//   }
+// }
+
+// class SignaturePainter extends CustomPainter {
+//   SignaturePainter(this.points);
+//   final List<Offset> points;
+//   void paint(Canvas canvas, Size size) {
+//     var paint = Paint()
+//       ..color = Colors.red
+//       ..strokeCap = StrokeCap.round
+//       ..strokeWidth = 5.0;
+//     for (int i = 0; i < points.length - 1; i++) {
+//       if (points[i] != null && points[i + 1] != null)
+//         canvas.drawLine(points[i], points[i + 1], paint);
+//     }
+//   }
+
+//   bool shouldRepaint(SignaturePainter other) => other.points != points;
+// }
+
+
+
+// http 请求 Demo
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-void main() => runApp(MaterialApp(home: DemoApp()));
-
-class DemoApp extends StatelessWidget {
-  Widget build(BuildContext context) => Scaffold(body: Signature());
+void main() {
+  runApp(SampleApp());
 }
 
-class Signature extends StatefulWidget {
-  SignatureState createState() => SignatureState();
-}
-
-class SignatureState extends State<Signature> {
-  List<Offset> _points = <Offset>[];
+class SampleApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (DragUpdateDetails details) {
-        setState(() {
-          RenderBox referenceBox = context.findRenderObject();
-          Offset localPosition =
-              referenceBox.globalToLocal(details.globalPosition);
-          _points = List.from(_points)..add(localPosition);
-        });
-      },
-      onPanEnd: (DragEndDetails details) => _points.add(null),
-      child:
-          CustomPaint(painter: SignaturePainter(_points), size: Size.infinite),
+    return MaterialApp(
+      title: 'Sample App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: SampleAppPage(),
     );
   }
 }
 
-class SignaturePainter extends CustomPainter {
-  SignaturePainter(this.points);
-  final List<Offset> points;
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = Colors.red
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 5.0;
-    for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i + 1] != null)
-        canvas.drawLine(points[i], points[i + 1], paint);
-    }
+class SampleAppPage extends StatefulWidget {
+  SampleAppPage({Key key}) : super(key: key);
+
+  @override
+  _SampleAppPageState createState() => _SampleAppPageState();
+}
+
+class _SampleAppPageState extends State<SampleAppPage> {
+  List widgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadData();
   }
 
-  bool shouldRepaint(SignaturePainter other) => other.points != points;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sample App'),
+      ),
+      body: ListView.builder(
+        itemCount: widgets.length,
+        itemBuilder: (BuildContext context, int position) {
+          return getRow(position);
+        },
+      ),
+    );
+  }
+
+  Widget getRow(int i) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Text('Row ${widgets[i]["title"]}'),
+    );
+  }
+
+  loadData() async {
+    String dataURL = "https://jsonplaceholder.typicode.com/posts";
+    http.Response response = await http.get(dataURL, headers: {'cookies': '111'});
+    setState(() {
+      widgets = json.decode(response.body);
+    });
+  }
 }
