@@ -545,7 +545,79 @@
 
 // }
 
-// 无限滚动 demo
+// 无限滚动 
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(SampleApp());
+// }
+
+// class SampleApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Sample App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SampleAppPage(),
+//     );
+//   }
+// }
+
+// class SampleAppPage extends StatefulWidget {
+//   SampleAppPage({Key key}) : super(key: key);
+
+//   @override
+//   _SampleAppPageState createState() => _SampleAppPageState();
+// }
+
+// class _SampleAppPageState extends State<SampleAppPage> {
+//   List widgets = <Widget>[];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     for (var i = 0; i < 100; i++) {
+//       widgets.add(getRow(i));
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: TextField(
+//           decoration: InputDecoration(hintText: "This is a hint"),
+//         ),
+//       ),
+//       body: ListView.builder(
+//         itemCount: widgets.length,
+//         itemBuilder: (BuildContext context, int position) {
+//           return getRow(position);
+//         }),
+//       );
+//   }
+
+//   Widget getRow(int i) {
+//     return GestureDetector(
+//       child: Padding(
+//         padding: EdgeInsets.all(10.0),
+//         child: Text('Row $i'),
+//       ),
+//       onTap: () {
+//         // setState(() {
+//         //   widgets.add(getRow(widgets.length + 1));
+//         //   print('rot $i');
+//         // });
+//         print('row $i');
+//       },
+//     );
+//   }
+// }
+
+
+// 输入框 校验email
 import 'package:flutter/material.dart';
 
 void main() {
@@ -573,64 +645,41 @@ class SampleAppPage extends StatefulWidget {
 }
 
 class _SampleAppPageState extends State<SampleAppPage> {
-  List widgets = <Widget>[];
-
-  @override
-  void initState() {
-    super.initState();
-    for (var i = 0; i < 100; i++) {
-      widgets.add(getRow(i));
-    }
-  }
+  String _errorText;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(hintText: "This is a hint"),
-        ),
+        title: Text('Sample App'),
       ),
-      body: ListView.builder(
-        itemCount: widgets.length,
-        itemBuilder: (BuildContext context, int position) {
-          return getRow(position);
-        }),
+      body: Center(
+        child: TextField(
+          onSubmitted: (String text) {
+            setState(() {
+              if (!isEmail(text)) {
+                _errorText = 'Error: this is not an email';
+              } else {
+                _errorText = null;
+              }
+            });
+          },
+          decoration: InputDecoration(hintText: 'This is a hit.', errorText: _getErrorText()),
+        ),
+      )
       );
   }
 
-  Widget getRow(int i) {
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Text('Row $i'),
-      ),
-      onTap: () {
-        // setState(() {
-        //   widgets.add(getRow(widgets.length + 1));
-        //   print('rot $i');
-        // });
-        print('row $i');
-      },
-    );
+  _getErrorText() {
+    return _errorText;
   }
-  // _getListData() {
-  //   List<Widget> widgets = [];
-  //   for (int i = 0; i < 100; i++) {
-  //     widgets.add(GestureDetector(
-  //       child: Padding(
-  //         padding: EdgeInsets.all(10.0),
-  //         child: Text('Row $i'),
-  //       ),
-  //       onTap: () {
-  //         print('row tapped');
-  //       },
-  //     ));
-  //     // widgets.add(Padding(
-  //     //   padding: EdgeInsets.all(10.0),
-  //     //   child: Text('Row $i'),
-  //     // ));
-  //   }
-  //   return widgets;
-  // }
+
+  bool isEmail(String em) {
+    String emailRegexp = 
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = RegExp(emailRegexp);
+
+    return regExp.hasMatch(em);
+  }
 }
