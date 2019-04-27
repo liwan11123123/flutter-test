@@ -1307,61 +1307,105 @@
 //   }
 // }
 
-// 将抽屉添加到屏幕
+// // 将抽屉添加到屏幕
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   final appTitle = 'Drawer Demo';
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: appTitle,
+//       home: MyHomePage(title: appTitle),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatelessWidget {
+//   final String title;
+
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: Center(
+//         child: Text('我的页面!'),
+//       ),
+//       drawer: Drawer(
+//         child: ListView(
+//           padding: EdgeInsets.zero,
+//           children: <Widget>[
+//             DrawerHeader(
+//               child: Text('Drawer Header'),
+//               decoration: BoxDecoration(
+//                 color: Colors.blue,
+//               ),
+//             ),
+//             ListTile(
+//               title: Text('Item 1'),
+//               onTap: () {
+//                 Navigator.of(context).pop();
+//               },
+//             ),
+//             ListTile(
+//               title: Text('Item 2'),
+//               onTap: () {
+//                 Navigator.of(context).pop();
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// 显示SnackBars
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(SnackBarDemo());
 
-class MyApp extends StatelessWidget {
-  final appTitle = 'Drawer Demo';
-
+class SnackBarDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appTitle,
-      home: MyHomePage(title: appTitle),
+      title: 'SnackBar Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('SnackBar Demo'),
+        ),
+        body: SnackBarPage(),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-
-  MyHomePage({Key key, this.title}) : super(key: key);
-
+class SnackBarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Text('我的页面!'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {
-                Navigator.of(context).pop();
+    return Center(
+      child: RaisedButton(
+        onPressed: () {
+          final snackBar = SnackBar(
+            content: Text('Yay! A SnackBar'),
+            action: SnackBarAction(
+              label: '关闭',
+              onPressed: () {
+                // 
               },
             ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
+          );
+
+          Scaffold.of(context).showSnackBar(snackBar);
+        },
+        child: Text('Show SnackBar'),
       ),
     );
   }
