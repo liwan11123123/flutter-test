@@ -1463,60 +1463,99 @@
 
 
 // 继承父主题
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final appName = 'Custom Themes';
+
+//     return MaterialApp(
+//       title: appName,
+//       theme: ThemeData(
+//           brightness: Brightness.dark,
+//           primaryColor: Colors.lightBlue[200],
+//           accentColor: Colors.cyan[600],
+//           fontFamily: 'Montserrat',
+//           textTheme: TextTheme(
+//               headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+//             )
+//           ),
+//       home: MyHomePage(
+//         title: appName,
+//       ),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatelessWidget {
+//   final String title;
+//   MyHomePage({Key key, @required this.title}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: Center(
+//         child: Container(
+//           color: Theme.of(context).primaryColor,
+//           child: Text(
+//             'Text with a background color',
+//             style: Theme.of(context).textTheme.title,
+//           ),
+//         ),
+//       ),
+//       floatingActionButton: Theme(
+//         data: Theme.of(context).copyWith(accentColor: Colors.yellow),
+//         child: FloatingActionButton(
+//           onPressed: null,
+//           child: Icon(Icons.add),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// Tabs 导航页
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(TabBarDemo());
 }
 
-class MyApp extends StatelessWidget {
+class TabBarDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appName = 'Custom Themes';
-
     return MaterialApp(
-      title: appName,
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.lightBlue[200],
-          accentColor: Colors.cyan[600],
-          fontFamily: 'Montserrat',
-          textTheme: TextTheme(
-              headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            )
+      home: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.directions_car),),
+                Tab(icon: Icon(Icons.directions_transit),),
+                Tab(icon: Icon(Icons.directions_bike),),
+                Tab(icon: Icon(Icons.directions_bike),),
+              ],
+            ),
+            title: Text('Tabs Demo'),
           ),
-      home: MyHomePage(
-        title: appName,
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-  MyHomePage({Key key, @required this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Text(
-            'Text with a background color',
-            style: Theme.of(context).textTheme.title,
+          body: TabBarView(
+            children: [
+              Icon(Icons.directions_car),
+              Icon(Icons.directions_transit),
+              Icon(Icons.directions_bike),
+              Icon(Icons.directions_bike),
+            ],
           ),
-        ),
-      ),
-      floatingActionButton: Theme(
-        data: Theme.of(context).copyWith(accentColor: Colors.yellow),
-        child: FloatingActionButton(
-          onPressed: null,
-          child: Icon(Icons.add),
         ),
       ),
     );
