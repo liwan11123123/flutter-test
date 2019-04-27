@@ -1243,17 +1243,80 @@
 //   }
 // }
 
-// 淡入淡出小工具
-import 'dart:math';
+// // 淡入淡出小工具
+// import 'dart:math';
 
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final appTitle = 'Opacity Demo';
+//     return MaterialApp(
+//       title: appTitle,
+//       home: MyHomePage(title: appTitle),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatefulWidget {
+//   final String title;
+
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }
+
+// class _MyHomePageState extends State<MyHomePage> {
+//   bool _visible = true;
+//   double _width = 200.0;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title),
+//       ),
+//       body: Center(
+//         child: AnimatedOpacity(
+//           opacity: _visible ? 1.0 : 0.0,
+//           duration: Duration(seconds: 1),
+//           curve: Curves.fastOutSlowIn,
+//           child: Container(
+//             width: _width,
+//             height: 200.0,
+//             color: Colors.green,
+//           ),
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           setState(() {
+//             _visible = !_visible;
+//             // final random = Random();
+//             // _width = random.nextInt(300).toDouble();
+//           });
+//         },
+//         tooltip: 'Toggle Opacity',
+//         child: Icon(Icons.flip),
+//       ),
+//     );
+//   }
+// }
+
+// 将抽屉添加到屏幕
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final appTitle = 'Drawer Demo';
+
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Opacity Demo';
     return MaterialApp(
       title: appTitle,
       home: MyHomePage(title: appTitle),
@@ -1261,47 +1324,44 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   final String title;
 
   MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  bool _visible = true;
-  double _width = 200.0;
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
-        child: AnimatedOpacity(
-          opacity: _visible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
-          curve: Curves.fastOutSlowIn,
-          child: Container(
-            width: _width,
-            height: 200.0,
-            color: Colors.green,
-          ),
-        ),
+        child: Text('我的页面!'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _visible = !_visible;
-            // final random = Random();
-            // _width = random.nextInt(300).toDouble();
-          });
-        },
-        tooltip: 'Toggle Opacity',
-        child: Icon(Icons.flip),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Drawer Header'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('Item 1'),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
