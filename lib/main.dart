@@ -772,7 +772,6 @@
 //   }
 // }
 
-
 // import 'dart:convert';
 
 // import 'package:flutter/material.dart';
@@ -960,84 +959,286 @@
 //   }
 // }
 
-import 'dart:convert';
+// import 'dart:convert';
+
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+
+// void main() {
+//   runApp(SampleApp());
+// }
+
+// class SampleApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Sample App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SampleAppPage(),
+//     );
+//   }
+// }
+
+// class SampleAppPage extends StatefulWidget {
+//   SampleAppPage({Key key}) : super(key: key);
+
+//   @override
+//   _SampleAppPageState createState() => _SampleAppPageState();
+// }
+
+// class _SampleAppPageState extends State<SampleAppPage> {
+//   List widgets = [];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     loadData();
+//   }
+
+//   showLoadingDialog() {
+//     return widgets.length == 0;
+//   }
+
+//   getBody() {
+//     if (showLoadingDialog()) {
+//       return getProgressDialog();
+//     } else {
+//       return getListView();
+//     }
+//   }
+
+//   getProgressDialog() {
+//     return Center(child: CircularProgressIndicator());
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         appBar: AppBar(
+//           title: Text("Sample App"),
+//         ),
+//         body: getBody());
+//   }
+
+//   ListView getListView() => ListView.builder(
+//       itemCount: widgets.length,
+//       itemBuilder: (BuildContext context, int position) {
+//         return getRow(position);
+//       });
+
+//   Widget getRow(int i) {
+//     return Padding(padding: EdgeInsets.all(10.0), child: Text("Row ${widgets[i]["title"]}"));
+//   }
+
+//   loadData() async {
+//     String dataURL = "https://jsonplaceholder.typicode.com/posts";
+//     http.Response response = await http.get(dataURL);
+//     setState(() {
+//       widgets = json.decode(response.body);
+//     });
+//   }
+// }
+
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(SampleApp());
+// }
+
+// class SampleApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Sample App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SampleAppPage(),
+//     );
+//   }
+// }
+
+// class SampleAppPage extends StatelessWidget {
+//   var container = Container(
+//     // gray box
+//     child: Center(
+//       child: Transform(
+//         child: Container(
+//           // red box
+//           child: Text(
+//             "Lorem ipsum",
+//             // style: bold24Roboto,
+//             textAlign: TextAlign.center,
+//           ),
+//           decoration: BoxDecoration(
+//             color: Colors.red[400],
+//           ),
+//           padding: EdgeInsets.all(16.0),
+//         ),
+//         alignment: Alignment.center,
+//         transform: Matrix4.identity()..rotateZ(15 * 3.1415927 / 180),
+//       ),
+//     ),
+//     width: 320.0,
+//     height: 240.0,
+//     color: Colors.grey[300],
+//   );
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
+
+// class SampleAppPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     // return Scaffold(
+//     //   drawer: Drawer(
+//     //     child: ListTile(
+//     //       leading: IconButton(icon: Icon(Icons.favorite_border),), //Icon(Icons.change_history),
+//     //       title: Text('Screen2'),
+//     //       onTap: () {
+//     //         Navigator.of(context).pushNamed("/b");
+//     //       },
+//     //     ),
+//     //     elevation: 20.0,
+//     //   ),
+//     //   appBar: AppBar(
+//     //     title: Text('111'),
+//     //   ),
+//     //   body: Text('111'),
+//     // );
+//     return GestureDetector(
+//       child: Scaffold(
+//         appBar: AppBar(
+//           title: Text("Gestures"),
+//         ),
+//         body: Center(
+//             child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Text('Tap, Long Press, Swipe Horizontally or Vertically '),
+//           ],
+//         )),
+//       ),
+//       onTap: () {
+//         print('Tapped');
+//       },
+//       onLongPress: () {
+//         print('Long Pressed');
+//       },
+//       onVerticalDragEnd: (DragEndDetails value) {
+//         print('Swiped Vertically $value');
+//       },
+//       onHorizontalDragEnd: (DragEndDetails value) {
+//         print('Swiped Horizontally $value');
+//       },
+//     );
+//   }
+// }
+
+// // Flutter
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(Center(child: LogoFade()));
+// }
+
+// class LogoFade extends StatefulWidget {
+//   _LogoFadeState createState() => _LogoFadeState();
+// }
+
+// class _LogoFadeState extends State<LogoFade> with TickerProviderStateMixin {
+//   Animation animation;
+//   AnimationController controller;
+
+//   initState() {
+//     super.initState();
+//     controller = AnimationController(
+//         duration: const Duration(milliseconds: 3000), vsync: this);
+//     final CurvedAnimation curve =
+//     CurvedAnimation(parent: controller, curve: Curves.easeIn);
+//     animation = Tween(begin: 0.0, end: 1.0).animate(curve);
+//     controller.forward();
+//   }
+
+//   Widget build(BuildContext context) {
+//     return FadeTransition(
+//       opacity: animation,
+//       child: Container(
+//         height: 300.0,
+//         width: 300.0,
+//         child: FlutterLogo(),
+//       ),
+//     );
+//   }
+
+//   dispose() {
+//     controller.dispose();
+//     super.dispose();
+//   }
+// }
+
+// 动画容器渐变
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(SampleApp());
+void main() => runApp(AnimatedContainerApp());
+
+class AnimatedContainerApp extends StatefulWidget {
+  @override
+  _AnimatedContainerAppState createState() => _AnimatedContainerAppState();
 }
 
-class SampleApp extends StatelessWidget {
+class _AnimatedContainerAppState extends State<AnimatedContainerApp> {
+  double _width = 50;
+  double _height = 50;
+  Color _color = Colors.green;
+  BorderRadiusGeometry _borderRadius = BorderRadius.circular(8);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sample App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SampleAppPage(),
-    );
-  }
-}
-
-class SampleAppPage extends StatefulWidget {
-  SampleAppPage({Key key}) : super(key: key);
-
-  @override
-  _SampleAppPageState createState() => _SampleAppPageState();
-}
-
-class _SampleAppPageState extends State<SampleAppPage> {
-  List widgets = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  showLoadingDialog() {
-    return widgets.length == 0;
-  }
-
-  getBody() {
-    if (showLoadingDialog()) {
-      return getProgressDialog();
-    } else {
-      return getListView();
-    }
-  }
-
-  getProgressDialog() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+      home: Scaffold(
         appBar: AppBar(
-          title: Text("Sample App"),
+          title: Text('AnimatedContainer Demo'),
         ),
-        body: getBody());
-  }
+        body: Center(
+          child: AnimatedContainer(
+            width: _width,
+            height: _height,
+            decoration: BoxDecoration(
+              color: _color,
+              borderRadius: _borderRadius,
+            ),
+            duration: Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.play_arrow),
+          onPressed: () {
+            setState(() {
+              final random = Random();
 
-  ListView getListView() => ListView.builder(
-      itemCount: widgets.length,
-      itemBuilder: (BuildContext context, int position) {
-        return getRow(position);
-      });
+              _width = random.nextInt(300).toDouble();
+              _height = random.nextInt(300).toDouble();
 
-  Widget getRow(int i) {
-    return Padding(padding: EdgeInsets.all(10.0), child: Text("Row ${widgets[i]["title"]}"));
-  }
-
-  loadData() async {
-    String dataURL = "https://jsonplaceholder.typicode.com/posts";
-    http.Response response = await http.get(dataURL);
-    setState(() {
-      widgets = json.decode(response.body);
-    });
+              _color = Color.fromRGBO(
+                  random.nextInt(256),
+                  random.nextInt(256),
+                  random.nextInt(256),
+                  1,
+                );
+              _borderRadius = BorderRadius.circular(random.nextInt(100).toDouble(),);
+            });
+          },
+        ),
+      ),
+    );
   }
 }
