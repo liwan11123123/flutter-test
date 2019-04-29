@@ -2060,17 +2060,45 @@
 // }
 
 // 使用缓存的图像
-import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:flutter/material.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'Cached Images';
+
+//     return MaterialApp(
+//       title: title,
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(title),
+//         ),
+//         body: Center(
+//           child: CachedNetworkImage(
+//             placeholder: CircularProgressIndicator(),
+//             imageUrl: 'https://picsum.photos/250?image=9',
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+// ListView 列表
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final title = 'Cached Images';
+    final title = 'Basic List';
 
     return MaterialApp(
       title: title,
@@ -2078,11 +2106,21 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Center(
-          child: CachedNetworkImage(
-            placeholder: CircularProgressIndicator(),
-            imageUrl: 'https://picsum.photos/250?image=9',
-          ),
+        body: ListView(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.map),
+              title: Text('Map'),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_album),
+              title: Text('Album'),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text('Phone'),
+            ),
+          ],
         ),
       ),
     );
