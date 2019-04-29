@@ -2091,6 +2091,44 @@
 
 
 // ListView 列表
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'Basic List';
+
+//     return MaterialApp(
+//       title: title,
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(title),
+//         ),
+//         body: ListView(
+//           children: <Widget>[
+//             ListTile(
+//               leading: Icon(Icons.map),
+//               title: Text('Map'),
+//             ),
+//             ListTile(
+//               leading: Icon(Icons.photo_album),
+//               title: Text('Album'),
+//             ),
+//             ListTile(
+//               leading: Icon(Icons.phone),
+//               title: Text('Phone'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+//横向排列的 列表ListView
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -2098,7 +2136,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final title = 'Basic List';
+    final title = 'Horizontal List';
 
     return MaterialApp(
       title: title,
@@ -2106,21 +2144,38 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.map),
-              title: Text('Map'),
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_album),
-              title: Text('Album'),
-            ),
-            ListTile(
-              leading: Icon(Icons.phone),
-              title: Text('Phone'),
-            ),
-          ],
+        body: Container(
+          margin: EdgeInsets.symmetric(vertical: 20.0),
+          height: 200.0,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Container(
+                width: 160.0,
+                color: Colors.red,
+              ),
+              Container(
+                width: 160.0,
+                color: Colors.blue,
+              ),
+              Container(
+                width: 160.0,
+                color: Colors.green,
+              ),
+              Container(
+                width: 160.0,
+                color: Colors.yellow,
+              ),
+              Container(
+                width: 160.0,
+                color: Colors.orange,
+              ),
+              Container(
+                width: 160.0,
+                color: Colors.red,
+              ),
+            ],
+          ),
         ),
       ),
     );
