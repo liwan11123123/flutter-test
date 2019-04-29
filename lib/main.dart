@@ -1874,56 +1874,120 @@
 //   }
 // }
 
+// // GestureDetector自定义手势， 监听用户Tap行为
+// import 'package:flutter/material.dart';
 
-// GestureDetector自定义手势， 监听用户Tap行为
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'Gesture Demo';
+
+//     return MaterialApp(
+//       title: title,
+//       home: MyHomePage(title: title),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatelessWidget {
+//   final String title;
+
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: Center(child: MyButton(),),
+//     );
+//   }
+// }
+
+// class MyButton extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         final snackBar = SnackBar(content: Text('Tap'),);
+
+//         Scaffold.of(context).showSnackBar(snackBar);
+//       },
+//       child: Container(
+//         padding: EdgeInsets.all(12.0),
+//         decoration: BoxDecoration(
+//           color: Theme.of(context).buttonColor,
+//           borderRadius: BorderRadius.circular(8.0),
+//         ),
+//         child: Text('My Button'),
+//       ),
+//     );
+//   }
+// }
+
+// 滑动删除list 中的一项
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  MyApp({Key key}) : super(key: key);
+
+  @override
+  MyAppState createState() {
+    return MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  final items = List<String>.generate(3, (i) => 'Item ${i + 1}');
+
   @override
   Widget build(BuildContext context) {
-    final title = 'Gesture Demo';
+    final title = 'Dismissing Items';
 
     return MaterialApp(
       title: title,
-      home: MyHomePage(title: title),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Center(child: MyButton(),),
-    );
-  }
-}
-
-class MyButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        final snackBar = SnackBar(content: Text('Tap'),);
-
-        Scaffold.of(context).showSnackBar(snackBar);
-      },
-      child: Container(
-        padding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).buttonColor,
-          borderRadius: BorderRadius.circular(8.0),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
         ),
-        child: Text('My Button'),
+        body: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (BuildContext context, i) {
+            final item = items[i];
+
+            return Dismissible(
+              key: Key(item),
+              onDismissed: (direction) {
+                setState(() {
+                  items.removeAt(i);
+                });
+
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('$item dismissed'),
+                  ),
+                );
+              },
+              background: Container(
+                color: Colors.red,
+              ),
+              child: ListTile(
+                title: Text('$item'),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
