@@ -1461,7 +1461,6 @@
 //   }
 // }
 
-
 // 继承父主题
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
@@ -1690,7 +1689,6 @@
 //   }
 // }
 
-
 // 两种方式监听输入框，一种 onChange， 另一种 TextEditingController
 // import 'package:flutter/material.dart';
 
@@ -1760,8 +1758,69 @@
 //   }
 // }
 
-
 // Dialog model弹出层
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Retrieve Text Input',
+//       home: MyCustomForm(),
+//     );
+//   }
+// }
+
+// // Define a Custom Form Widget
+// class MyCustomForm extends StatefulWidget {
+//   @override
+//   _MyCustomFormState createState() => _MyCustomFormState();
+// }
+
+// // Define a corresponding State class. This class will hold the data related to
+// // our Form.
+// class _MyCustomFormState extends State<MyCustomForm> {
+//   final myController = TextEditingController();
+
+//   @override
+//   void dispose() {
+//     myController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Retrieve Text Input'),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: TextField(
+//           controller: myController,
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           return showDialog(
+//             context: context,
+//             builder: (context) {
+//               return AlertDialog(
+//                 content: Text(myController.text),
+//               );
+//             }
+//           );
+//         },
+//         tooltip: 'Show me the value!',
+//         child: Icon(Icons.text_fields),
+//       ),
+//     );
+//   }
+// }
+
+// 添加水波纹效果
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -1769,55 +1828,47 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final title = 'InkWell Demo';
+
     return MaterialApp(
-      title: 'Retrieve Text Input',
-      home: MyCustomForm(),
+      title: title,
+      home: MyHomePage(title: title),
     );
   }
 }
 
-// Define a Custom Form Widget
-class MyCustomForm extends StatefulWidget {
-  @override
-  _MyCustomFormState createState() => _MyCustomFormState();
-}
+class MyHomePage extends StatelessWidget {
+  final String title;
 
-// Define a corresponding State class. This class will hold the data related to
-// our Form.
-class _MyCustomFormState extends State<MyCustomForm> {
-  final myController = TextEditingController();
-
-  @override
-  void dispose() {
-    myController.dispose();
-    super.dispose();
-  }
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Retrieve Text Input'),
+        title: Text(title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: TextField(
-          controller: myController,
-        ),
+      body: Center(
+        child: MyButton(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(myController.text),
-              );
-            }
-          );
-        },
-        tooltip: 'Show me the value!',
-        child: Icon(Icons.text_fields),
+    );
+  }
+}
+
+class MyButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Tap'),
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(12.0),
+        child: Text('Flat Button'),
       ),
     );
   }
