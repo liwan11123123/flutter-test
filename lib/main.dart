@@ -1626,7 +1626,72 @@
 //   }
 // }
 
-// 输入框自动聚焦 和 绑定FocusNode
+// // 输入框自动聚焦 和 绑定FocusNode
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Text Field Focus',
+//       home: MyCustomForm(),
+//     );
+//   }
+// }
+
+// class MyCustomForm extends StatefulWidget {
+//   @override
+//   _MyCustomFormState createState() => _MyCustomFormState();
+// }
+
+// class _MyCustomFormState extends State<MyCustomForm> {
+//   FocusNode myFocusNode;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     myFocusNode = FocusNode();
+//   }
+
+//   @override
+//   void dispose() {
+//     myFocusNode.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Text Field Focus'),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             TextField(
+//               autofocus: true,
+//             ),
+//             TextField(
+//               focusNode: myFocusNode,
+//             ),
+//           ],
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () => FocusScope.of(context).requestFocus(myFocusNode),
+//         tooltip: 'Focus Second Text Field',
+//         child: Icon(Icons.edit),
+//       ),
+//     );
+//   }
+// }
+
+
+// 两种方式监听输入框，一种 onChange， 另一种 TextEditingController
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -1635,56 +1700,61 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Text Field Focus',
+      title: 'Retrieve Text Input',
       home: MyCustomForm(),
     );
   }
 }
 
+// Define a Custom Form Widget
 class MyCustomForm extends StatefulWidget {
   @override
   _MyCustomFormState createState() => _MyCustomFormState();
 }
 
+// Define a corresponding State class. This class will hold the data related to
+// our Form.
 class _MyCustomFormState extends State<MyCustomForm> {
-  FocusNode myFocusNode;
+  final myController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    myFocusNode = FocusNode();
+    myController.addListener(_printLatestValue);
   }
 
   @override
   void dispose() {
-    myFocusNode.dispose();
+    myController.dispose();
     super.dispose();
+  }
+
+  _printLatestValue() {
+    print('Second text field: ${myController.value}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text Field Focus'),
+        title: Text('Retrieve Text Input'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: [
+          children: <Widget>[
             TextField(
-              autofocus: true,
+              onChanged: (text) {
+                print('First text field: $text');
+              },
+              maxLength: 11,
             ),
             TextField(
-              focusNode: myFocusNode,
-            ),
+              controller: myController,
+            )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => FocusScope.of(context).requestFocus(myFocusNode),
-        tooltip: 'Focus Second Text Field',
-        child: Icon(Icons.edit),
       ),
     );
   }
