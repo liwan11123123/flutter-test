@@ -1820,7 +1820,62 @@
 //   }
 // }
 
-// 添加水波纹效果
+// // 添加水波纹效果
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'InkWell Demo';
+
+//     return MaterialApp(
+//       title: title,
+//       home: MyHomePage(title: title),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatelessWidget {
+//   final String title;
+
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: Center(
+//         child: MyButton(),
+//       ),
+//     );
+//   }
+// }
+
+// class MyButton extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: () {
+//         Scaffold.of(context).showSnackBar(
+//           SnackBar(
+//             content: Text('Tap'),
+//           ),
+//         );
+//       },
+//       child: Container(
+//         padding: EdgeInsets.all(12.0),
+//         child: Text('Flat Button'),
+//       ),
+//     );
+//   }
+// }
+
+
+// GestureDetector自定义手势， 监听用户Tap行为
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -1828,7 +1883,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final title = 'InkWell Demo';
+    final title = 'Gesture Demo';
 
     return MaterialApp(
       title: title,
@@ -1848,9 +1903,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(
-        child: MyButton(),
-      ),
+      body: Center(child: MyButton(),),
     );
   }
 }
@@ -1858,17 +1911,19 @@ class MyHomePage extends StatelessWidget {
 class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Tap'),
-          ),
-        );
+        final snackBar = SnackBar(content: Text('Tap'),);
+
+        Scaffold.of(context).showSnackBar(snackBar);
       },
       child: Container(
         padding: EdgeInsets.all(12.0),
-        child: Text('Flat Button'),
+        decoration: BoxDecoration(
+          color: Theme.of(context).buttonColor,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Text('My Button'),
       ),
     );
   }
