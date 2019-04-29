@@ -2085,6 +2085,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-    )
+    );
   }
 }
