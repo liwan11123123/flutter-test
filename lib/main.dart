@@ -2217,71 +2217,109 @@
 // }
 
 // 根据值，返回不同的 Widget
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(MyApp(
+//     items: List<ListItem>.generate(
+//       1000,
+//       (i) => i % 6 == 0
+//           ? HeadingItem('Heading $i')
+//           : MessageItem('Sender $i', 'Message body $i'),
+//     ),
+//   ));
+// }
+
+// class MyApp extends StatelessWidget {
+//   final List<ListItem> items;
+
+//   MyApp({Key key, @required this.items}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'Mixed List';
+
+//     return MaterialApp(
+//       title: title,
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(title),
+//         ),
+//         body: ListView.builder(
+//           itemCount: items.length,
+//           itemBuilder: (context, index) {
+//             final item = items[index];
+
+//             if (item is HeadingItem) {
+//               return ListTile(
+//                 title: Text(
+//                   item.heading,
+//                   style: Theme.of(context).textTheme.headline,
+//                 ),
+//               );
+//             } else if (item is MessageItem) {
+//               return ListTile(
+//                 title: Text(item.sender),
+//                 subtitle: Text(item.body),
+//               );
+//             }
+//           },
+//         )
+//       ),
+//     );
+//   }
+// }
+
+// abstract class ListItem {}
+
+// class HeadingItem implements ListItem {
+//   final String heading;
+
+//   HeadingItem(this.heading);
+// }
+
+// class MessageItem implements ListItem {
+//   final String sender;
+//   final String body;
+
+//   MessageItem(this.sender, this.body);
+// }
+
+
+// 在列表上方放置一个浮动应用栏
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp(
-    items: List<ListItem>.generate(
-      1000,
-      (i) => i % 6 == 0
-          ? HeadingItem('Heading $i')
-          : MessageItem('Sender $i', 'Message body $i'),
-    ),
-  ));
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final List<ListItem> items;
-
-  MyApp({Key key, @required this.items}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Mixed List';
+    final title = 'Floating App Bar';
 
     return MaterialApp(
       title: title,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              title: Text('title'),
+              floating: false,
+              flexibleSpace: Text('data'),
+              expandedHeight: 200,
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => ListTile(title: Text('Item $index'),),
+                childCount: 1000,
+              ),
+            ),
+          ],
         ),
-        body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-
-            if (item is HeadingItem) {
-              return ListTile(
-                title: Text(
-                  item.heading,
-                  style: Theme.of(context).textTheme.headline,
-                ),
-              );
-            } else if (item is MessageItem) {
-              return ListTile(
-                title: Text(item.sender),
-                subtitle: Text(item.body),
-              );
-            }
-          },
-        )
       ),
     );
   }
-}
-
-abstract class ListItem {}
-
-class HeadingItem implements ListItem {
-  final String heading;
-
-  HeadingItem(this.heading);
-}
-
-class MessageItem implements ListItem {
-  final String sender;
-  final String body;
-
-  MessageItem(this.sender, this.body);
 }
