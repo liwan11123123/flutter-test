@@ -2429,30 +2429,83 @@
 
 
 // 路由导航 push pop
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(MaterialApp(
+//     title: 'Navigation Basics',
+//     home: FirstRoute(),
+//   ));
+// }
+
+// class FirstRoute extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('First Route'),
+//       ),
+//       body: Center(
+//         child: RaisedButton(
+//           child: Text('Open route'),
+//           onPressed: () {
+//             Navigator.push(
+//               context, 
+//               MaterialPageRoute(builder: (context) => SecondRoute()),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class SecondRoute extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Second Route'),
+//       ),
+//       body: Center(
+//         child: RaisedButton(
+//           onPressed: () {
+//             // Navigator.pop(context);
+//           },
+//           child: Text('Go back!'),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+// 路由跳转
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: 'Navigation Basics',
-    home: FirstRoute(),
+    title: 'Named Routes Demo',
+    initialRoute: '/',
+    routes: {
+      '/': (context) => FirstScreen(),
+      '/second': (context) => SecondScreen(),
+    },
   ));
 }
 
-class FirstRoute extends StatelessWidget {
+class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('First Route'),
+        title: Text('First Screen'),
       ),
       body: Center(
         child: RaisedButton(
-          child: Text('Open route'),
+          child: Text('Launch screen'),
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => SecondRoute()),
-            );
+            Navigator.pushNamed(context, '/second');
           },
         ),
       ),
@@ -2460,17 +2513,17 @@ class FirstRoute extends StatelessWidget {
   }
 }
 
-class SecondRoute extends StatelessWidget {
+class SecondScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Second Route'),
+        title: Text('Second Screen'),
       ),
       body: Center(
         child: RaisedButton(
           onPressed: () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: Text('Go back!'),
         ),
