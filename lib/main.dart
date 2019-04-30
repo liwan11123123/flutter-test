@@ -2362,66 +2362,118 @@
 // }
 
 // 在屏幕上设置小部件动画
+// import 'package:flutter/material.dart';
+
+// void main() => runApp(HeroApp());
+
+// class HeroApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Transition Demo',
+//       home: MainScreen(),
+//     );
+//   }
+// }
+
+// class MainScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Main Screen'),
+//       ),
+//       body: GestureDetector(
+//         child: MyHero(),
+//         onTap: () {
+//           Navigator.push(context, MaterialPageRoute(builder: (_) {
+//             return DetailScreen();
+//           }));
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// class MyHero extends StatelessWidget {
+//   const MyHero({
+//     Key key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Hero(
+//       tag: 'imageHero',
+//       child: Image.network(
+//         'https://picsum.photos/250?image=9',
+//       ),
+//     );
+//   }
+// }
+
+// class DetailScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: GestureDetector(
+//         child: Center(
+//           child: MyHero(),
+//         ),
+//         onTap: () {
+//           Navigator.pop(context);
+//         },
+//       ),
+//     );
+//   }
+// }
+
+
+// 路由导航 push pop
 import 'package:flutter/material.dart';
 
-void main() => runApp(HeroApp());
-
-class HeroApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Transition Demo',
-      home: MainScreen(),
-    );
-  }
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: FirstRoute(),
+  ));
 }
 
-class MainScreen extends StatelessWidget {
+class FirstRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main Screen'),
+        title: Text('First Route'),
       ),
-      body: GestureDetector(
-        child: MyHero(),
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return DetailScreen();
-          }));
-        },
-      ),
-    );
-  }
-}
-
-class MyHero extends StatelessWidget {
-  const MyHero({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-      tag: 'imageHero',
-      child: Image.network(
-        'https://picsum.photos/250?image=9',
+      body: Center(
+        child: RaisedButton(
+          child: Text('Open route'),
+          onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => SecondRoute()),
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-class DetailScreen extends StatelessWidget {
+class SecondRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        child: Center(
-          child: MyHero(),
+      appBar: AppBar(
+        title: Text('Second Route'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            // Navigator.pop(context);
+          },
+          child: Text('Go back!'),
         ),
-        onTap: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }
