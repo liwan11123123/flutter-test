@@ -2286,7 +2286,6 @@
 //   MessageItem(this.sender, this.body);
 // }
 
-
 // 在列表上方放置一个浮动应用栏
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
@@ -2324,40 +2323,105 @@
 //   }
 // }
 
-
 // 无限滚动列表
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(MyApp(
+//     items: List<String>.generate(10000, (i) => 'Item $i'),
+//   ));
+// }
+
+// class MyApp extends StatelessWidget {
+//   final List<String> items;
+
+//   MyApp({Key key, @required this.items}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final title = 'Long List';
+
+//     return MaterialApp(
+//       title: title,
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(title),
+//         ),
+//         body: ListView.builder(
+//           itemCount: items.length,
+//           itemBuilder: (context, index) {
+//             return ListTile(
+//               title: Text('${items[index]}'),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// 在屏幕上设置小部件动画
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp(
-    items: List<String>.generate(10000, (i) => 'Item $i'),
-  ));
+void main() => runApp(HeroApp());
+
+class HeroApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Transition Demo',
+      home: MainScreen(),
+    );
+  }
 }
 
-class MyApp extends StatelessWidget {
-  final List<String> items;
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Main Screen'),
+      ),
+      body: GestureDetector(
+        child: MyHero(),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return DetailScreen();
+          }));
+        },
+      ),
+    );
+  }
+}
 
-  MyApp({Key key, @required this.items}) : super(key: key);
+class MyHero extends StatelessWidget {
+  const MyHero({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Long List';
+    return Hero(
+      tag: 'imageHero',
+      child: Image.network(
+        'https://picsum.photos/250?image=9',
+      ),
+    );
+  }
+}
 
-    return MaterialApp(
-      title: title,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
+class DetailScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: MyHero(),
         ),
-        body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('${items[index]}'),
-            );
-          },
-        ),
+        onTap: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }
