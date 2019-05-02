@@ -2427,7 +2427,6 @@
 //   }
 // }
 
-
 // 路由导航 push pop
 // import 'package:flutter/material.dart';
 
@@ -2450,7 +2449,7 @@
 //           child: Text('Open route'),
 //           onPressed: () {
 //             Navigator.push(
-//               context, 
+//               context,
 //               MaterialPageRoute(builder: (context) => SecondRoute()),
 //             );
 //           },
@@ -2478,7 +2477,6 @@
 //     );
 //   }
 // }
-
 
 // 路由跳转
 // import 'package:flutter/material.dart';
@@ -2532,7 +2530,6 @@
 //   }
 // }
 
-
 // // 带参数 导航的路由
 // import 'package:flutter/material.dart';
 
@@ -2577,7 +2574,7 @@
 //               child: Text('Navigate to screen that extracts arguments'),
 //               onPressed: () {
 //                 Navigator.push(
-//                   context, 
+//                   context,
 //                   MaterialPageRoute(
 //                     builder: (context) => ExtractArgumentsScreen(),
 //                     settings: RouteSettings(
@@ -2594,7 +2591,7 @@
 //               child: Text('Navigate to a named that accepts arguments'),
 //               onPressed: () {
 //                 Navigator.pushNamed(
-//                   context, 
+//                   context,
 //                   PassArgumentsScreen.routeName,
 //                   arguments: ScreenArguments(
 //                     'Accept Arguments Screen',
@@ -2660,91 +2657,179 @@
 //   ScreenArguments(this.title, this.message);
 // }
 
-
 // 从屏幕返回数据
+// import 'package:flutter/material.dart';
+// import 'package:mobx/mobx.dart';
+
+// void main() {
+//   runApp(MaterialApp(
+//     title: 'Returning Data',
+//     home: HomeScreen(),
+//   ));
+// }
+
+// class HomeScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Returning Data Demo'),
+//       ),
+//       body: Center(child: SelectionButton()),
+//     );
+//   }
+// }
+
+// class SelectionButton extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return RaisedButton(
+//       onPressed: () {
+//         _navigateAndDisplaySelection(context);
+//       },
+//       child: Text('Pick an option, any option!'),
+//     );
+//   }
+
+//   // A method that launches the SelectionScreen and awaits the result from
+//   // Navigator.pop!
+//   _navigateAndDisplaySelection(BuildContext context) async {
+//     // Navigator.push returns a Future that will complete after we call
+//     // Navigator.pop on the Selection Screen!
+//     final result = await Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (context) => SelectionScreen()),
+//     );
+
+//     // After the Selection Screen returns a result, hide any previous snackbars
+//     // and show the new result!
+//     Scaffold.of(context)
+//       ..removeCurrentSnackBar()
+//       ..showSnackBar(SnackBar(content: Text("$result")));
+//   }
+// }
+
+// class SelectionScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Pick an option'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: RaisedButton(
+//                 onPressed: () {
+//                   // Close the screen and return "Yep!" as the result
+//                   Navigator.pop(context, 'Yep!');
+//                 },
+//                 child: Text('Yep!'),
+//               ),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: RaisedButton(
+//                 onPressed: () {
+//                   // Close the screen and return "Nope!" as the result
+//                   Navigator.pop(context, 'Nope.');
+//                 },
+//                 child: Text('Nope.'),
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+// 路由传参
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+class Todo {
+  final String title;
+  final String description;
+
+  Todo(this.title, this.description);
+}
+
 void main() {
-  runApp(MaterialApp(
-    title: 'Returning Data',
-    home: HomeScreen(),
-  ));
+  runApp(new MyApp());
 }
 
-class HomeScreen extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Returning Data Demo'),
-      ),
-      body: Center(child: SelectionButton()),
-    );
-  }
-}
-
-class SelectionButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: () {
-        _navigateAndDisplaySelection(context);
-      },
-      child: Text('Pick an option, any option!'),
-    );
-  }
-
-  // A method that launches the SelectionScreen and awaits the result from
-  // Navigator.pop!
-  _navigateAndDisplaySelection(BuildContext context) async {
-    // Navigator.push returns a Future that will complete after we call
-    // Navigator.pop on the Selection Screen!
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SelectionScreen()),
-    );
-
-    // After the Selection Screen returns a result, hide any previous snackbars
-    // and show the new result!
-    Scaffold.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text("$result")));
-  }
-}
-
-class SelectionScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pick an option'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
-                onPressed: () {
-                  // Close the screen and return "Yep!" as the result
-                  Navigator.pop(context, 'Yep!');
-                },
-                child: Text('Yep!'),
+    return MaterialApp(
+      title: 'Passing Data',
+      home: TodosScreen(
+        todos: List.generate(
+          20,
+          (i) => Todo(
+                'Todo $i',
+                'A description of what needs to be done for Todo $i',
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
-                onPressed: () {
-                  // Close the screen and return "Nope!" as the result
-                  Navigator.pop(context, 'Nope.');
-                },
-                child: Text('Nope.'),
-              ),
-            )
-          ],
         ),
+      ),
+    );
+  }
+}
+
+class TodosScreen extends StatelessWidget {
+  final List<Todo> todos;
+
+  TodosScreen({Key key, @required this.todos}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Todos'),
+      ),
+      body: ListView.builder(
+        itemCount: todos.length,
+        itemBuilder: (context, i) {
+          return ListTile(
+            title: Text(todos[i].title),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(todo: todos[i]),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final Todo todo;
+
+  DetailScreen({Key key, @required this.todo}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(todo.title),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Text(todo.description),
       ),
     );
   }
