@@ -2989,116 +2989,203 @@
 
 
 // 在后台处理json数据
-import 'dart:async';
-import 'dart:convert';
+// import 'dart:async';
+// import 'dart:convert';
 
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:transparent_image/transparent_image.dart';
+
+// Future<List<Photo>> fetchPhoto(http.Client client) async {
+//   final response =
+//     await client.get('https://jsonplaceholder.typicode.com/photos');
+
+//   return compute(parsePhotos, response.body);
+// }
+
+// List<Photo> parsePhotos(String responseBody) {
+//   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+//   return parsed.map<Photo>((json) => Photo.fromJson(json)).toList();
+// }
+
+// class Photo {
+//   final int albumId;
+//   final int id;
+//   final String title;
+//   final String url;
+//   final String thumbnailUrl;
+
+//   Photo({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
+
+//   factory Photo.fromJson(Map<String, dynamic> json) {
+//     return Photo(
+//       albumId: json['albumId'] as int,
+//       id: json['id'] as int,
+//       title: json['title'] as String,
+//       url: json['url'] as String,
+//       thumbnailUrl: json['thumbnailUrl'] as String, 
+//     );
+//   }
+// }
+
+// void main() => runApp(MyApp());
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final appTitle = 'Isolate Demo';
+//     return MaterialApp(
+//       title: appTitle,
+//       home: MyHomePage(title: appTitle),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatelessWidget {
+//   final String title;
+
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: FutureBuilder<List<Photo>>(
+//         future: fetchPhoto(http.Client()),
+//         builder: (context, snapshot) {
+//           if (snapshot.hasError) print(snapshot.error);
+
+//           return snapshot.hasData
+//             ? PhotosList(photos: snapshot.data)
+//             : Center(child: CircularProgressIndicator(),);
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// class PhotosList extends StatelessWidget {
+//   final List<Photo> photos;
+
+//   PhotosList({Key key, this.photos}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GridView.builder(
+//       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//         crossAxisCount: 2,
+//       ),
+//       itemCount: photos.length,
+//       itemBuilder: (context, index) {
+//         // return Image.network(photos[index].thumbnailUrl);
+//         // return FadeInImage.memoryNetwork(
+//         //         placeholder: kTransparentImage,
+//         //         image: photos[index].thumbnailUrl,
+//         // );
+//         // 占位符 淡入 显示图片
+//         return Stack(
+//           children: <Widget>[
+//             Center(child: CircularProgressIndicator(),),
+//             Center(
+//               child: FadeInImage.memoryNetwork(
+//                 placeholder: kTransparentImage,
+//                 image: photos[index].thumbnailUrl,
+//               ),
+//             )
+//           ],
+//         );
+//       },
+//     );
+//   }
+// } 
+
+
+// 使用WebSockets
 import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:transparent_image/transparent_image.dart';
-
-Future<List<Photo>> fetchPhoto(http.Client client) async {
-  final response =
-    await client.get('https://jsonplaceholder.typicode.com/photos');
-
-  return compute(parsePhotos, response.body);
-}
-
-List<Photo> parsePhotos(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed.map<Photo>((json) => Photo.fromJson(json)).toList();
-}
-
-class Photo {
-  final int albumId;
-  final int id;
-  final String title;
-  final String url;
-  final String thumbnailUrl;
-
-  Photo({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
-
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-      albumId: json['albumId'] as int,
-      id: json['id'] as int,
-      title: json['title'] as String,
-      url: json['url'] as String,
-      thumbnailUrl: json['thumbnailUrl'] as String, 
-    );
-  }
-}
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Isolate Demo';
+    final title = 'WebSocket Demo';
     return MaterialApp(
-      title: appTitle,
-      home: MyHomePage(title: appTitle),
+      title: title,
+      home: MyHomePage(
+        title: title,
+        channel: IOWebSocketChannel.connect('ws://echo.websocket.org'),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   final String title;
+  final WebSocketChannel channel;
 
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, @required this.title, @required this.channel})
+    : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
-      body: FutureBuilder<List<Photo>>(
-        future: fetchPhoto(http.Client()),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-
-          return snapshot.hasData
-            ? PhotosList(photos: snapshot.data)
-            : Center(child: CircularProgressIndicator(),);
-        },
-      ),
-    );
-  }
-}
-
-class PhotosList extends StatelessWidget {
-  final List<Photo> photos;
-
-  PhotosList({Key key, this.photos}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemCount: photos.length,
-      itemBuilder: (context, index) {
-        // return Image.network(photos[index].thumbnailUrl);
-        // return FadeInImage.memoryNetwork(
-        //         placeholder: kTransparentImage,
-        //         image: photos[index].thumbnailUrl,
-        // );
-        // 占位符 淡入 显示图片
-        return Stack(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(child: CircularProgressIndicator(),),
-            Center(
-              child: FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image: photos[index].thumbnailUrl,
+            Form(
+              child: TextFormField(
+                controller: _controller,
+                decoration: InputDecoration(labelText: 'Send a message'),
               ),
+            ),
+            StreamBuilder(
+              stream: widget.channel.stream,
+              builder: (context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
+                );
+              },
             )
           ],
-        );
-      },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _sendMessage,
+        tooltip: '发送消息',
+        child: Icon(Icons.send),
+      ),
     );
   }
-} 
+
+  void _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      widget.channel.sink.add(_controller.text);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.channel.sink.close();
+    super.dispose();
+  }
+}
