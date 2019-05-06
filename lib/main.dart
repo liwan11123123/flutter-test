@@ -2913,76 +2913,175 @@
 
 
 // 从互联网上获取数据
+// import 'dart:async';
+// import 'dart:convert';
+
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+
+// Future<Post> fetchPost() async {
+//   final response =
+//       await http.get('https://jsonplaceholder.typicode.com/posts/1',);
+
+//   if (response.statusCode == 200) {
+//     // If the call to the server was successful, parse the JSON
+//     return Post.fromJson(json.decode(response.body));
+//   } else {
+//     // If that call was not successful, throw an error.
+//     throw Exception('Failed to load post');
+//   }
+// }
+
+// class Post {
+//   final int userId;
+//   final int id;
+//   final String title;
+//   final String body;
+
+//   Post({this.userId, this.id, this.title, this.body});
+
+//   factory Post.fromJson(Map<String, dynamic> json) {
+//     return Post(
+//       userId: json['userId'],
+//       id: json['id'],
+//       title: json['title'],
+//       body: json['body'],
+//     );
+//   }
+// }
+
+// void main() => runApp(MyApp(post: fetchPost()));
+
+// class MyApp extends StatelessWidget {
+//   final Future<Post> post;
+
+//   MyApp({Key key, this.post}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Fetch Data Example',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Fetch Data Example'),
+//         ),
+//         body: Center(
+//           child: FutureBuilder<Post>(
+//             future: post,
+//             builder: (context, snapshot) {
+//               if (snapshot.hasData) {
+//                 return Text(snapshot.data.title);
+//               } else if (snapshot.hasError) {
+//                 return Text('${snapshot.error}');
+//               }
+
+//               return CircularProgressIndicator();
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+// 在后台处理json数据
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Post> fetchPost() async {
+Future<List<Photo>> fetchPhoto(http.Client client) async {
   final response =
-      await http.get('https://jsonplaceholder.typicode.com/posts/1');
+    await client.get('https://jsonplaceholder.typicode.com/photos');
 
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    return Post.fromJson(json.decode(response.body));
-  } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
-  }
+  return compute(parsePhotos, response.body);
 }
 
-class Post {
-  final int userId;
+List<Photo> parsePhotos(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Photo>((json) => Photo.fromJson(json)).toList();
+}
+
+class Photo {
+  final int albumId;
   final int id;
   final String title;
-  final String body;
+  final String url;
+  final String thumbnailUrl;
 
-  Post({this.userId, this.id, this.title, this.body});
+  Photo({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
+  factory Photo.fromJson(Map<String, dynamic> json) {
+    return Photo(
+      albumId: json['albumId'] as int,
+      id: json['id'] as int,
+      title: json['title'] as String,
+      url: json['url'] as String,
+      thumbnailUrl: json['thumbnailUrl'] as String, 
     );
   }
 }
 
-void main() => runApp(MyApp(post: fetchPost()));
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Future<Post> post;
+  @override
+  Widget build(BuildContext context) {
+    final appTitle = 'Isolate Demo';
+    return MaterialApp(
+      title: appTitle,
+      home: MyHomePage(title: appTitle),
+    );
+  }
+}
 
-  MyApp({Key key, this.post}) : super(key: key);
+class MyHomePage extends StatelessWidget {
+  final String title;
+
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: FutureBuilder<Post>(
-            future: post,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.title);
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
+      body: FutureBuilder<List<Photo>>(
+        future: fetchPhoto(http.Client()),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
 
-              return CircularProgressIndicator();
-            },
-          ),
-        ),
+          return snapshot.hasData
+            ? PhotosList(photos: snapshot.data)
+            : Center(child: CircularProgressIndicator(),);
+        },
       ),
     );
   }
 }
+
+class PhotosList extends StatelessWidget {
+  final List<Photo> photos;
+
+  PhotosList({Key key, this.photos}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemCount: photos.length,
+      itemBuilder: (context, index) {
+        return Image.network(photos[index].thumbnailUrl);
+      },
+    );
+  }
+} 
