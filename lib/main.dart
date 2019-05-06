@@ -2995,6 +2995,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:transparent_image/transparent_image.dart';
 
 Future<List<Photo>> fetchPhoto(http.Client client) async {
   final response =
@@ -3076,11 +3077,27 @@ class PhotosList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
       ),
       itemCount: photos.length,
       itemBuilder: (context, index) {
-        return Image.network(photos[index].thumbnailUrl);
+        // return Image.network(photos[index].thumbnailUrl);
+        // return FadeInImage.memoryNetwork(
+        //         placeholder: kTransparentImage,
+        //         image: photos[index].thumbnailUrl,
+        // );
+        // 占位符 淡入 显示图片
+        return Stack(
+          children: <Widget>[
+            Center(child: CircularProgressIndicator(),),
+            Center(
+              child: FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: photos[index].thumbnailUrl,
+              ),
+            )
+          ],
+        );
       },
     );
   }
