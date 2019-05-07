@@ -3192,114 +3192,216 @@
 
 
 // 使用sqflite 本地数据库
+// import 'dart:async';
+
+// import 'package:path/path.dart';
+// import 'package:sqflite/sqflite.dart';
+
+// void main() async {
+//   final database = openDatabase(
+//     join(await getDatabasesPath(), 'doggle_database.db'),
+//     onCreate: (db, version) {
+//       return db.execute(
+//         'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+//       );
+//     },
+//     version: 1,
+//   );
+
+//   Future<void> insertDog(Dog dog) async {
+//     final Database db = await database;
+
+//     await db.insert(
+//       'dogs',
+//       dog.toMap(),
+//       conflictAlgorithm: ConflictAlgorithm.replace,
+//     );
+//   }
+
+//   Future<List<Dog>> dogs() async {
+//     final Database db = await database;
+
+//     final List<Map<String, dynamic>> maps = await db.query('dogs');
+
+//     return List.generate(maps.length, (i) {
+//       return Dog(
+//         id: maps[i]['id'],
+//         name: maps[i]['name'],
+//         age: maps[i]['age'],
+//       );
+//     });
+//   }
+
+//   Future<void> updateDog(Dog dog) async {
+//     final db = await database;
+
+//     await db.update(
+//       'dogs',
+//       dog.toMap(),
+//       where: 'id = ?',
+//       whereArgs: [dog.id],
+//     );
+//   }
+
+//   Future<void> deleteDog(int id) async {
+//     final db = await database;
+
+//     await db.delete(
+//       'dogs',
+//       where: 'id = ?',
+//       whereArgs: [id],
+//     );
+//   }
+
+//   var fido = Dog(
+//     id: 0,
+//     name: 'Fido',
+//     age: 35,
+//   );
+
+//   await insertDog(fido);
+//   var fido1 = Dog(
+//     id: 1,
+//     name: 'F22ido',
+//     age: 353,
+//   );
+//   await insertDog(fido1);
+
+//   print(await dogs());
+
+//   fido = Dog(
+//     id: fido.id,
+//     name: fido.name,
+//     age: fido.age + 11,
+//   );
+//   await updateDog(fido);
+
+//   print(await dogs());
+
+//   await deleteDog(fido.id);
+
+//   print(await dogs());
+// }
+
+// class Dog {
+//   final int id;
+//   final String name;
+//   final int age;
+
+//   Dog({this.id, this.name, this.age});
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'id': id,
+//       'name': name,
+//       'age': age,
+//     };
+//   }
+
+//   @override
+//   String toString() {
+//     return 'Dog{id: $id, name: $name, age: $age}';
+//   }
+// }
+
+
+
+// 读取/写入 本地文件 
 import 'dart:async';
+import 'dart:io';
 
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() async {
-  final database = openDatabase(
-    join(await getDatabasesPath(), 'doggle_database.db'),
-    onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
-      );
-    },
-    version: 1,
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Reading and Writing Files',
+      home: FlutterDemo(storage: CounterStorage()),
+    ),
   );
+}
 
-  Future<void> insertDog(Dog dog) async {
-    final Database db = await database;
+class CounterStorage {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
 
-    await db.insert(
-      'dogs',
-      dog.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    return directory.path;
   }
 
-  Future<List<Dog>> dogs() async {
-    final Database db = await database;
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counter.txt');
+  }
 
-    final List<Map<String, dynamic>> maps = await db.query('dogs');
+  Future<int> readCounter() async {
+    try {
+      final file = await _localFile;
 
-    return List.generate(maps.length, (i) {
-      return Dog(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        age: maps[i]['age'],
-      );
+      String contents = await file.readAsString();
+      print(contents);
+
+      return int.parse(contents);
+    } catch (e) {
+
+      return 0;
+    }
+  }
+
+  Future<File> writeCounter(int counter) async {
+    final file = await _localFile;
+
+    return file.writeAsString('$counter');
+  }
+}
+
+class FlutterDemo extends StatefulWidget {
+  final CounterStorage storage;
+
+  FlutterDemo({Key key, @required this.storage}) : super(key: key);
+
+  @override
+  _FlutterDemoState createState() => _FlutterDemoState();
+}
+
+class _FlutterDemoState extends State<FlutterDemo> {
+  int _counter;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.storage.readCounter().then((int value) {
+      setState(() {
+        _counter = value;
+      });
     });
   }
 
-  Future<void> updateDog(Dog dog) async {
-    final db = await database;
+  Future<File> _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
 
-    await db.update(
-      'dogs',
-      dog.toMap(),
-      where: 'id = ?',
-      whereArgs: [dog.id],
-    );
-  }
-
-  Future<void> deleteDog(int id) async {
-    final db = await database;
-
-    await db.delete(
-      'dogs',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  var fido = Dog(
-    id: 0,
-    name: 'Fido',
-    age: 35,
-  );
-
-  await insertDog(fido);
-  var fido1 = Dog(
-    id: 1,
-    name: 'F22ido',
-    age: 353,
-  );
-  await insertDog(fido1);
-
-  print(await dogs());
-
-  fido = Dog(
-    id: fido.id,
-    name: fido.name,
-    age: fido.age + 11,
-  );
-  await updateDog(fido);
-
-  print(await dogs());
-
-  await deleteDog(fido.id);
-
-  print(await dogs());
-}
-
-class Dog {
-  final int id;
-  final String name;
-  final int age;
-
-  Dog({this.id, this.name, this.age});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'age': age,
-    };
+    return widget.storage.writeCounter(_counter);
   }
 
   @override
-  String toString() {
-    return 'Dog{id: $id, name: $name, age: $age}';
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reading and Writing Files'),
+      ),
+      body: Center(
+        child: Text(
+          'Button tapped $_counter time${_counter == 1 ? '' : 's'}.',
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }
