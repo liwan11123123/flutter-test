@@ -3307,101 +3307,185 @@
 
 
 // 读取/写入 本地文件 
-import 'dart:async';
-import 'dart:io';
+// import 'dart:async';
+// import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+// import 'package:path_provider/path_provider.dart';
+
+// void main() {
+//   runApp(
+//     MaterialApp(
+//       title: 'Reading and Writing Files',
+//       home: FlutterDemo(storage: CounterStorage()),
+//     ),
+//   );
+// }
+
+// class CounterStorage {
+//   Future<String> get _localPath async {
+//     final directory = await getApplicationDocumentsDirectory();
+
+//     return directory.path;
+//   }
+
+//   Future<File> get _localFile async {
+//     final path = await _localPath;
+//     return File('$path/counter.txt');
+//   }
+
+//   Future<int> readCounter() async {
+//     try {
+//       final file = await _localFile;
+
+//       String contents = await file.readAsString();
+//       print(contents);
+
+//       return int.parse(contents);
+//     } catch (e) {
+
+//       return 0;
+//     }
+//   }
+
+//   Future<File> writeCounter(int counter) async {
+//     final file = await _localFile;
+
+//     return file.writeAsString('$counter');
+//   }
+// }
+
+// class FlutterDemo extends StatefulWidget {
+//   final CounterStorage storage;
+
+//   FlutterDemo({Key key, @required this.storage}) : super(key: key);
+
+//   @override
+//   _FlutterDemoState createState() => _FlutterDemoState();
+// }
+
+// class _FlutterDemoState extends State<FlutterDemo> {
+//   int _counter;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     widget.storage.readCounter().then((int value) {
+//       setState(() {
+//         _counter = value;
+//       });
+//     });
+//   }
+
+//   Future<File> _incrementCounter() {
+//     setState(() {
+//       _counter++;
+//     });
+
+//     return widget.storage.writeCounter(_counter);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Reading and Writing Files'),
+//       ),
+//       body: Center(
+//         child: Text(
+//           'Button tapped $_counter time${_counter == 1 ? '' : 's'}.',
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _incrementCounter,
+//         tooltip: 'Increment',
+//         child: Icon(Icons.add),
+//       ),
+//     );
+//   }
+// }
+
+
+// 在磁盘上存储键值数据
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      title: 'Reading and Writing Files',
-      home: FlutterDemo(storage: CounterStorage()),
-    ),
-  );
-}
+void main() => runApp(MyApp());
 
-class CounterStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/counter.txt');
-  }
-
-  Future<int> readCounter() async {
-    try {
-      final file = await _localFile;
-
-      String contents = await file.readAsString();
-      print(contents);
-
-      return int.parse(contents);
-    } catch (e) {
-
-      return 0;
-    }
-  }
-
-  Future<File> writeCounter(int counter) async {
-    final file = await _localFile;
-
-    return file.writeAsString('$counter');
+class MyApp extends StatelessWidget {
+  // This widget is the root of the application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Shared preferences demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: 'Shared preferences demo'),
+    );
   }
 }
 
-class FlutterDemo extends StatefulWidget {
-  final CounterStorage storage;
-
-  FlutterDemo({Key key, @required this.storage}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+  final String title;
 
   @override
-  _FlutterDemoState createState() => _FlutterDemoState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _FlutterDemoState extends State<FlutterDemo> {
-  int _counter;
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
 
   @override
   void initState() {
     super.initState();
-    widget.storage.readCounter().then((int value) {
-      setState(() {
-        _counter = value;
-      });
+    _loadCounter();
+  }
+
+  //Loading counter value on start
+  _loadCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = (prefs.getInt('counter') ?? 0);
     });
   }
 
-  Future<File> _incrementCounter() {
+  //Incrementing counter after click
+  _incrementCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _counter++;
+      _counter = (prefs.getInt('counter') ?? 0) + 1;
+      prefs.setInt('counter', _counter);
     });
-
-    return widget.storage.writeCounter(_counter);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reading and Writing Files'),
+        title: Text(widget.title),
       ),
       body: Center(
-        child: Text(
-          'Button tapped $_counter time${_counter == 1 ? '' : 's'}.',
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.display1,
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
