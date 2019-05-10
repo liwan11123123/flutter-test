@@ -3492,51 +3492,149 @@
 
 
 // 播放器
+// import 'dart:async';
+
+// import 'package:flutter/material.dart';
+// import 'package:video_player/video_player.dart';
+
+// void main() => runApp(VideoPlayerApp());
+
+// class VideoPlayerApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Video Player Demo',
+//       home: VideoPlayerScreen(),
+//     );
+//   }
+// }
+
+// class VideoPlayerScreen extends StatefulWidget {
+//   VideoPlayerScreen({Key key}) : super(key: key);
+
+//   @override
+//   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+// }
+
+// class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+//   VideoPlayerController _controller;
+//   Future<void> _initializeVideoPlayerFuture;
+
+//   @override
+//   void initState() {
+//     _controller = VideoPlayerController.network(
+//       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'
+//     );
+
+//     _initializeVideoPlayerFuture = _controller.initialize();
+
+//     _controller.setLooping(true);
+
+//     super.initState();
+//   }
+
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Butterfly Video'),
+//       ),
+//       body: FutureBuilder(
+//         future: _initializeVideoPlayerFuture,
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.done) {
+//             return AspectRatio(
+//               aspectRatio: _controller.value.aspectRatio,
+//               child: VideoPlayer(_controller),
+//             );
+//           } else {
+//             return Center(child: CircularProgressIndicator(),);
+//           }
+//         },
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           setState(() {
+//             if (_controller.value.isPlaying) {
+//               _controller.pause();
+//             } else {
+//               _controller.play();
+//             }
+//           });
+//         },
+//         child: Icon(
+//           _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+// camera 照相机 (有bug)
 import 'dart:async';
+import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:path/path.dart' show join;
+import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(VideoPlayerApp());
+Future<void> main() async {
+  final cameras = await availableCameras();
 
-class VideoPlayerApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Player Demo',
-      home: VideoPlayerScreen(),
-    );
-  }
+  final firstCamera = cameras.first;
+
+  runApp(
+    MaterialApp(
+      theme: ThemeData.dark(),
+      home: TakePictureScreen(
+        camera: firstCamera,
+      ),
+    ),
+  );
 }
 
-class VideoPlayerScreen extends StatefulWidget {
-  VideoPlayerScreen({Key key}) : super(key: key);
+class TakePictureScreen extends StatefulWidget {
+  final CameraDescription camera;
+
+  const TakePictureScreen({
+    Key key,
+    @required this.camera,
+  }) : super(key: key);
 
   @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+  TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
+class TakePictureScreenState extends State<TakePictureScreen> {
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'
+    super.initState();
+
+    _controller = CameraController(
+      widget.camera,
+      ResolutionPreset.medium,
     );
 
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    _controller.setLooping(true);
-
-    super.initState();
+    _initializeControllerFuture = _controller.initialize();
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -3544,35 +3642,58 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Butterfly Video'),
+        title: Text('Take a picture'),
       ),
-      body: FutureBuilder(
-        future: _initializeVideoPlayerFuture,
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            );
+            return CameraPreview(_controller);
           } else {
             return Center(child: CircularProgressIndicator(),);
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              _controller.play();
-            }
-          });
+        child: Icon(Icons.camera_alt),
+        onPressed: () async {
+          try {
+            await _initializeControllerFuture;
+
+            final path = join(
+              (await getTemporaryDirectory()).path,
+              '${DateTime.now()}.png',
+            );
+
+            await _controller.takePicture(path);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DisplayPictureScreen(imagePath: path),
+              ),
+            );
+          } catch (e) {
+            print(e);
+          }
         },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
       ),
+    );
+  }
+}
+
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+
+  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Display the Picture'),
+      ),
+      body: Image.file(File(imagePath)),
     );
   }
 }
