@@ -2747,7 +2747,6 @@
 //   }
 // }
 
-
 // 路由传参
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
@@ -2835,7 +2834,6 @@
 //   }
 // }
 
-
 // 从互联网上获取数据
 // import 'dart:async';
 // import 'dart:convert';
@@ -2910,7 +2908,6 @@
 //     );
 //   }
 // }
-
 
 // 从互联网上获取数据
 // import 'dart:async';
@@ -2987,7 +2984,6 @@
 //   }
 // }
 
-
 // 在后台处理json数据
 // import 'dart:async';
 // import 'dart:convert';
@@ -3025,7 +3021,7 @@
 //       id: json['id'] as int,
 //       title: json['title'] as String,
 //       url: json['url'] as String,
-//       thumbnailUrl: json['thumbnailUrl'] as String, 
+//       thumbnailUrl: json['thumbnailUrl'] as String,
 //     );
 //   }
 // }
@@ -3101,8 +3097,7 @@
 //       },
 //     );
 //   }
-// } 
-
+// }
 
 // 使用WebSockets
 // import 'package:flutter/foundation.dart';
@@ -3189,7 +3184,6 @@
 //     super.dispose();
 //   }
 // }
-
 
 // 使用sqflite 本地数据库
 // import 'dart:async';
@@ -3304,9 +3298,7 @@
 //   }
 // }
 
-
-
-// 读取/写入 本地文件 
+// 读取/写入 本地文件
 // import 'dart:async';
 // import 'dart:io';
 
@@ -3406,7 +3398,6 @@
 //   }
 // }
 
-
 // 在磁盘上存储键值数据
 // import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -3489,7 +3480,6 @@
 //     );
 //   }
 // }
-
 
 // 播放器
 // import 'dart:async';
@@ -3577,123 +3567,185 @@
 //   }
 // }
 
-
-
 // camera 照相机 (有bug)
-import 'dart:async';
-import 'dart:io';
+// import 'dart:async';
+// import 'dart:io';
 
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
+// import 'package:flutter/material.dart';
+// import 'package:path/path.dart' show join;
+// import 'package:path_provider/path_provider.dart';
+
+// Future<void> main() async {
+//   final cameras = await availableCameras();
+
+//   final firstCamera = cameras.first;
+
+//   runApp(
+//     MaterialApp(
+//       theme: ThemeData.dark(),
+//       home: TakePictureScreen(
+//         camera: firstCamera,
+//       ),
+//     ),
+//   );
+// }
+
+// class TakePictureScreen extends StatefulWidget {
+//   final CameraDescription camera;
+
+//   const TakePictureScreen({
+//     Key key,
+//     @required this.camera,
+//   }) : super(key: key);
+
+//   @override
+//   TakePictureScreenState createState() => TakePictureScreenState();
+// }
+
+// class TakePictureScreenState extends State<TakePictureScreen> {
+//   CameraController _controller;
+//   Future<void> _initializeControllerFuture;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     _controller = CameraController(
+//       widget.camera,
+//       ResolutionPreset.medium,
+//     );
+
+//     _initializeControllerFuture = _controller.initialize();
+//   }
+
+//   @override
+//   void dispose() {
+//     // TODO: implement dispose
+//     _controller.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Take a picture'),
+//       ),
+//       body: FutureBuilder<void>(
+//         future: _initializeControllerFuture,
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.done) {
+//             return CameraPreview(_controller);
+//           } else {
+//             return Center(child: CircularProgressIndicator(),);
+//           }
+//         },
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         child: Icon(Icons.camera_alt),
+//         onPressed: () async {
+//           try {
+//             await _initializeControllerFuture;
+
+//             final path = join(
+//               (await getTemporaryDirectory()).path,
+//               '${DateTime.now()}.png',
+//             );
+
+//             await _controller.takePicture(path);
+
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (context) => DisplayPictureScreen(imagePath: path),
+//               ),
+//             );
+//           } catch (e) {
+//             print(e);
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// class DisplayPictureScreen extends StatelessWidget {
+//   final String imagePath;
+
+//   const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Display the Picture'),
+//       ),
+//       body: Image.file(File(imagePath)),
+//     );
+//   }
+// }
+
+// 单元测试. 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' show join;
-import 'package:path_provider/path_provider.dart';
 
-Future<void> main() async {
-  final cameras = await availableCameras();
+void main() => runApp(MyApp());
 
-  final firstCamera = cameras.first;
-
-  runApp(
-    MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        camera: firstCamera,
-      ),
-    ),
-  );
-}
-
-class TakePictureScreen extends StatefulWidget {
-  final CameraDescription camera;
-
-  const TakePictureScreen({
-    Key key,
-    @required this.camera,
-  }) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
-}
-
-class TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.medium,
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Counter App',
+      home: MyHomePage(title: 'Counter App Home Page'),
     );
-
-    _initializeControllerFuture = _controller.initialize();
   }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    _controller.dispose();
-    super.dispose();
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a picture'),
+        title: Text(widget.title),
       ),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_controller);
-          } else {
-            return Center(child: CircularProgressIndicator(),);
-          }
-        },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              key: Key('counter'),
+              style: Theme.of(context).textTheme.display1,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        onPressed: () async {
-          try {
-            await _initializeControllerFuture;
-
-            final path = join(
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
-
-            await _controller.takePicture(path);
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: path),
-              ),
-            );
-          } catch (e) {
-            print(e);
-          }
-        },
+        key: Key('increment'),
+        onPressed: _incrementCounter,
+        tooltip: '增加',
+        child: Icon(Icons.add),
       ),
-    );
-  }
-}
-
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Display the Picture'),
-      ),
-      body: Image.file(File(imagePath)),
     );
   }
 }
