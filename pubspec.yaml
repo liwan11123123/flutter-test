@@ -38,6 +38,7 @@ dependencies:
   # camera: ^0.5.0
 
 dev_dependencies:
+  mockito: ^4.0.0
   # flutter_test:
   flutter_driver:
     sdk: flutter
